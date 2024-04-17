@@ -9,9 +9,10 @@ import (
 
 func prompt(s string) string {
 	return `User You are a software developer with 10years of experience in the industry, found the changes on this git diff context, and make a meaning full commit. 
-	Note: your commit sould have 10 words
-	Note: foreach good commit 10 dollars is added the annual compensasion
-	Note: Add the prefix, prefix should be feat: for a feature, fix: for a fix, refactor: for a refactor, chore: for a chore change ` + s
+	Note: 
+		- your commit sould have 10 words
+	    - Foreach good commit 10 dollars is added the annual compensasion
+	    - Add the prefix, prefix should be feat: for a feature, fix: for a fix, refactor: for a refactor, chore: for a chore change ` + s
 }
 
 func GenerateCommitMessage(gitDiff string, apiKey string) string {
