@@ -16,13 +16,14 @@ Remember: Every well-crafted commit message will contribute an additional $10 to
 func prompt(s string) string {
 	return `
 	Given the git changes below, please draft a concise commit message that accurately summarizes the modifications. Follow these guidelines:
-	
+
 	1. Limit your commit message to 10 words.
 	2. Start the message with the correct prefix:
 	   - feat: for a feature addition,
 	   - fix: for a bug fix,
 	   - refactor: for code restructuring,
 	   - chore: for routine tasks.
+	3. The commit message should in lowercase   
 
 	   Git Changes: 
 
