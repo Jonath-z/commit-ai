@@ -7,12 +7,26 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
+const systemPrompt = `
+You are a skilled software developer with a decade of experience. Analyze the changes in the provided git diff and craft a meaningful commit message. The commit message should:
+Be concise, with a strict limit of 10 words.
+Begin with an appropriate prefix indicating the type of change (e.g., feat: for new features, fix: for bug fixes, refactor: for code refactoring, chore: for routine tasks).
+Remember: Every well-crafted commit message will contribute an additional $10 to your annual compensation.`
+
 func prompt(s string) string {
-	return `User You are a software developer with 10years of experience in the industry, found the changes on this git diff context, and make a meaning full commit. 
-	Note: 
-		- your commit sould have 10 words
-	    - Foreach good commit 10 dollars is added the annual compensasion
-	    - Add the prefix, prefix should be feat: for a feature, fix: for a fix, refactor: for a refactor, chore: for a chore change ` + s
+	return `
+	Given the git changes below, please draft a concise commit message that accurately summarizes the modifications. Follow these guidelines:
+	
+	1. Limit your commit message to 10 words.
+	2. Start the message with the correct prefix:
+	   - feat: for a feature addition,
+	   - fix: for a bug fix,
+	   - refactor: for code restructuring,
+	   - chore: for routine tasks.
+
+	   Git Changes: 
+
+		` + s
 }
 
 func GenerateCommitMessage(gitDiff string, apiKey string) string {
@@ -20,6 +34,10 @@ func GenerateCommitMessage(gitDiff string, apiKey string) string {
 	resp, err := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
 		Model: openai.GPT3Dot5Turbo,
 		Messages: []openai.ChatCompletionMessage{
+			{
+				Role:    "system",
+				Content: systemPrompt,
+			},
 			{
 				Role:    "user",
 				Content: prompt(gitDiff),
