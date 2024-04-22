@@ -8,7 +8,6 @@ import (
 )
 
 func ExecuteCommitMsg(commitMsg string) {
-	formattedCommitMsg := "\"" + commitMsg + "\""
 	addCmd := exec.Command("git", "add", ".")
 	addErr := addCmd.Run()
 
@@ -17,7 +16,7 @@ func ExecuteCommitMsg(commitMsg string) {
 		return
 	}
 
-	cmd := exec.Command("git", "commit", "-m", formattedCommitMsg)
+	cmd := exec.Command("git", "commit", "-m", commitMsg)
 
 	fmt.Println(cmd.Args)
 
