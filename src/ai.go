@@ -23,7 +23,7 @@ func prompt(s string) string {
 	   - fix: for a bug fix,
 	   - refactor: for code restructuring,
 	   - chore: for routine tasks.
-	3. The commit message should in lowercase   
+	3. The whole commit message should in lowercase, no uppercase characters are allowed.
 
 	   Git Changes: 
 
