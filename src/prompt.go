@@ -5,9 +5,8 @@ You are a skilled software developer with a decade of experience. Analyze the ch
 The commit message should:
 1. Be concise, with a strict limit of 10 words.
 2. Begin with an appropriate prefix indicating the type of change (e.g., feat: for new features, fix: for bug fixes, refactor: for code refactoring, chore: for routine tasks).
-Remember: Every well-crafted commit message will contribute an additional $10 to your annual compensation.
 
-Here is your context: 
+According to the following convientional commit guidelines:
 
 # Conventional Commits
 
