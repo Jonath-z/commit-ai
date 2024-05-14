@@ -22,7 +22,7 @@ func prompt(s string) string {
 func GenerateCommitMessage(gitDiff string, apiKey string) string {
 	client := openai.NewClient(apiKey)
 	resp, err := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
-		Model: openai.GPT3Dot5Turbo,
+		Model: "gpt-4o",
 		Messages: []openai.ChatCompletionMessage{
 			{
 				Role:    "system",
