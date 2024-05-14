@@ -1,6 +1,6 @@
 # Commit-AI
 
-Commit-AI is a CLI tool designed to automate the generation of meaningful commit messages for your Git repositories. Leveraging the power of OpenAI's GPT-3.5 Turbo, it analyzes your git diffs and crafts commit messages that are concise, descriptive, and follow best practices.
+Commit-AI is a CLI tool designed to automate the generation of meaningful commit messages for your Git repositories. Leveraging the power of OpenAI's models, it analyzes your git diffs and crafts commit messages that are concise, descriptive, and follow best practices.
 
 ## Demo
 
