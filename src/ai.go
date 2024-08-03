@@ -13,7 +13,7 @@ func prompt(s string) string {
 
 	1. Limit your commit message to 10 words.
 	2. The whole commit message should in lowercase, no uppercase characters are allowed.
-	3. Markdown symbols are not allowed.
+	3. Do not respond in Markdown
 
 	   Git Changes: 
 

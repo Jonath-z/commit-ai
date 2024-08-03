@@ -15,7 +15,6 @@ func GetGitChanges() string {
 	}
 
 	cmd.Wait()
-	// fmt.Println(string(output))
 	if string(output) == " " {
 		return "Initial commit"
 	}
