@@ -17,9 +17,19 @@ Commit-AI is a CLI tool designed to automate the generation of meaningful commit
 
 ## Installation
 
+### With Go
+
 1. Ensure you have Go installed on your system (version 1.21).
 2. Clone the repository to your local machine.
 3. Navigate to the cloned directory and run `go build && go install` to compile the application.
+
+### Using the binary
+
+- Linux
+
+```bash
+  curl https://raw.githubusercontent.com/Jonath-z/commit-ai/master/install.sh | sh
+```
 
 ## Usage
 
