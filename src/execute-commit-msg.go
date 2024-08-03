@@ -37,4 +37,5 @@ func ExecuteCommitMsg(commitMsg string) {
 	}
 
 	cmd.Wait()
+	exec.Command("git", "git", "commit", "--amend")
 }
