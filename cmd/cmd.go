@@ -56,7 +56,9 @@ func Cli() {
 	}
 
 	gitDiff := src.GetGitChanges()
+	spinner := src.StartSpinner("generating commit message")
 	commitMsg, err := src.GenerateCommitMessage(p, gitDiff)
+	spinner.Stop()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to generate commit message: %v\n", err)
 		os.Exit(1)
