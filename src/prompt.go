@@ -9,7 +9,7 @@ The commit message should:
 4. Never respond in markdown format.
 5. You give meaningful commit message.
 
-According to the following convientional commit guidelines:
+According to the following conventional commit guidelines:
 
 # Conventional Commits
 

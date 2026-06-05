@@ -1,10 +1,7 @@
 package src
 
 import (
-	"context"
-	"fmt"
-
-	"github.com/sashabaranov/go-openai"
+	"github.com/Jonath-z/commit-ai/src/providers"
 )
 
 func prompt(s string) string {
@@ -15,30 +12,11 @@ func prompt(s string) string {
 	2. The whole commit message should in lowercase, no uppercase characters are allowed.
 	3. Do not respond in Markdown
 
-	   Git Changes: 
+	   Git Changes:
 
 		` + s
 }
 
-func GenerateCommitMessage(gitDiff string, apiKey string) string {
-	client := openai.NewClient(apiKey)
-	resp, err := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
-		Model: "gpt-4o",
-		Messages: []openai.ChatCompletionMessage{
-			{
-				Role:    "system",
-				Content: SystemPrompt,
-			},
-			{
-				Role:    "user",
-				Content: prompt(gitDiff),
-			},
-		},
-	})
-
-	if err != nil {
-		fmt.Print(err.Error())
-	}
-
-	return resp.Choices[0].Message.Content
+func GenerateCommitMessage(p providers.Provider, gitDiff string) (string, error) {
+	return p.Generate(SystemPrompt, prompt(gitDiff))
 }
