@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Jonath-z/commit-ai/compare/v1.0.0...v1.0.1) (2026-06-07)
+
+
+### Bug Fixes
+
+* trigger deployment ([14e4535](https://github.com/Jonath-z/commit-ai/commit/14e4535423c7e20d00d0b9d5e71d2193934b07e3))
+
 ## 1.0.0 (2026-06-07)
 
 
