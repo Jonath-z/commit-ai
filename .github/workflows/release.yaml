@@ -2,32 +2,49 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [master]
+    tags: ["v*"]
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
+  release-please:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: go
+          package-name: commit-ai
+
   build:
     name: Build ${{ matrix.goos }}/${{ matrix.goarch }}
+    needs: [release-please]
+    if: |
+      always() && (
+        needs.release-please.outputs.release_created == 'true' ||
+        startsWith(github.ref, 'refs/tags/v')
+      )
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
-          - goos: linux
-            goarch: amd64
-          - goos: linux
-            goarch: arm64
-          - goos: darwin
-            goarch: amd64
-          - goos: darwin
-            goarch: arm64
+          - { goos: linux,  goarch: amd64 }
+          - { goos: linux,  goarch: arm64 }
+          - { goos: darwin, goarch: amd64 }
+          - { goos: darwin, goarch: arm64 }
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name || github.ref }}
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - uses: actions/setup-go@v5
         with:
           go-version: "1.21"
 
@@ -40,31 +57,11 @@ jobs:
           go build -trimpath -ldflags="-s -w" \
             -o "commit-ai-${GOOS}-${GOARCH}" .
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: commit-ai-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: commit-ai-${{ matrix.goos }}-${{ matrix.goarch }}
-          if-no-files-found: error
-
-  release:
-    name: Publish release
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
-
-      - name: Generate checksums
-        working-directory: dist
-        run: sha256sum commit-ai-* > checksums.txt
-
-      - name: Create release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*
-          generate_release_notes: true
-          fail_on_unmatched_files: true
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ needs.release-please.outputs.tag_name || github.ref_name }}"
+          gh release upload "$TAG" \
+            "commit-ai-${{ matrix.goos }}-${{ matrix.goarch }}" \
+            --repo "${{ github.repository }}" --clobber
