@@ -2,12 +2,12 @@
 
 set -e
 
-URL=https://github.com/Jonath-z/commit-ai
+URL=https://raw.githubusercontent.com/Jonath-z/commit-ai/master/commit-ai
 INSTALL_DIR="/usr/local/bin"
 BINARY_NAME=commit-ai
 
-echo "Fetching lastest version..."
-curl -lo $BINARY_NAME $URL
+echo "Fetching latest version..."
+curl -fL -o $BINARY_NAME $URL
 
 echo "Making $BINARY_NAME executable..."
 chmod +x $BINARY_NAME
