@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Jonath-z/commit-ai/compare/v1.2.0...v1.2.0) (2026-10-03)
+
+
+### Documentation
+
+* add release announcement article ([a3c28a4](https://github.com/Jonath-z/commit-ai/commit/a3c28a42c48ba0702964dde6932898456aecfdd6))
+
 ## [1.2.0](https://github.com/Jonath-z/commit-ai/compare/v1.1.0...v1.2.0) (2026-10-03)
 
 
