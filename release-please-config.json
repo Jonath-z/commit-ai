@@ -4,6 +4,7 @@
     ".": {
       "release-type": "go",
       "package-name": "commit-ai",
+      "include-component-in-tag": false,
       "extra-files": ["cmd/version.go"]
     }
   }
