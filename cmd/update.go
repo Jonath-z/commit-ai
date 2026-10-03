@@ -21,13 +21,14 @@ func runUpdate() {
 		os.Exit(1)
 	}
 
-	current := "v" + Version
-	if latest == current {
-		fmt.Printf("commit-ai is already up to date (%s)\n", current)
+	// Tags may be "v1.1.0" or "commit-ai-v1.1.0" depending on release config.
+	latestVersion := strings.TrimPrefix(strings.TrimPrefix(latest, "commit-ai-"), "v")
+	if latestVersion == Version {
+		fmt.Printf("commit-ai is already up to date (v%s)\n", Version)
 		return
 	}
 
-	fmt.Printf("updating commit-ai %s -> %s\n", current, latest)
+	fmt.Printf("updating commit-ai v%s -> v%s\n", Version, latestVersion)
 
 	asset := fmt.Sprintf("commit-ai-%s-%s", runtime.GOOS, runtime.GOARCH)
 	url := fmt.Sprintf("https://github.com/%s/releases/download/%s/%s", repo, latest, asset)
