@@ -19,9 +19,6 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
-        with:
-          release-type: go
-          package-name: commit-ai
 
   build:
     name: Build ${{ matrix.goos }}/${{ matrix.goarch }}

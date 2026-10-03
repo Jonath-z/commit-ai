@@ -7,8 +7,15 @@ import (
 	"os/exec"
 )
 
-func ExecuteCommitMsg(commitMsg string) {
-	addCmd := exec.Command("git", "add", ".")
+func ExecuteCommitMsg(commitMsg string, files []string) {
+	addArgs := []string{"add"}
+	if len(files) > 0 {
+		addArgs = append(addArgs, "--")
+		addArgs = append(addArgs, files...)
+	} else {
+		addArgs = append(addArgs, ".")
+	}
+	addCmd := exec.Command("git", addArgs...)
 	addErr := addCmd.Run()
 
 	if addErr != nil {

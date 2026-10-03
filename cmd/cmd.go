@@ -11,9 +11,18 @@ import (
 )
 
 func Cli() {
-	if len(os.Args) >= 2 && os.Args[1] == "config" {
-		runConfig(os.Args[2:])
-		return
+	if len(os.Args) >= 2 {
+		switch os.Args[1] {
+		case "config":
+			runConfig(os.Args[2:])
+			return
+		case "update":
+			runUpdate()
+			return
+		case "version", "--version", "-v":
+			fmt.Println("commit-ai v" + Version)
+			return
+		}
 	}
 
 	if handleTopLevelHelp() {
@@ -55,7 +64,13 @@ func Cli() {
 		os.Exit(1)
 	}
 
-	gitDiff := src.GetGitChanges()
+	files := flag.Args()
+
+	gitDiff := src.GetGitChanges(files)
+	if len(files) > 0 && gitDiff == "" {
+		fmt.Fprintln(os.Stderr, "no unstaged changes found in the given file(s)")
+		os.Exit(1)
+	}
 	spinner := src.StartSpinner("generating commit message")
 	commitMsg, err := src.GenerateCommitMessage(p, gitDiff)
 	spinner.Stop()
@@ -65,5 +80,5 @@ func Cli() {
 	}
 	fmt.Println(commitMsg)
 	fmt.Println("------------- Executing the commit message ------------")
-	src.ExecuteCommitMsg(commitMsg)
+	src.ExecuteCommitMsg(commitMsg, files)
 }

@@ -23,6 +23,15 @@ go install github.com/Jonath-z/commit-ai@latest
 curl https://raw.githubusercontent.com/Jonath-z/commit-ai/master/install.sh | sh
 ```
 
+### Updating
+
+```bash
+commit-ai update            # self-update to the latest release
+commit-ai version           # check the installed version
+```
+
+If the binary lives in a root-owned directory (e.g. /usr/local/bin), run `sudo commit-ai update`.
+
 ## Configuration
 
 Settings are persisted to `~/.config/commit-ai/config.json`. You configure once, then just run `commit-ai`.
@@ -82,6 +91,13 @@ Inside a git repo with unstaged changes:
 
 ```bash
 commit-ai
+```
+
+Commit only specific files (other changes stay untouched):
+
+```bash
+commit-ai src/main.go
+commit-ai src/main.go README.md
 ```
 
 Override the configured provider for a single run:

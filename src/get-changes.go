@@ -5,8 +5,13 @@ import (
 	"os/exec"
 )
 
-func GetGitChanges() string {
-	cmd := exec.Command("git", "diff")
+func GetGitChanges(files []string) string {
+	args := []string{"diff"}
+	if len(files) > 0 {
+		args = append(args, "--")
+		args = append(args, files...)
+	}
+	cmd := exec.Command("git", args...)
 
 	output, err := cmd.Output()
 

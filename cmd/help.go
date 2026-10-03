@@ -8,8 +8,12 @@ import (
 const rootHelp = `commit-ai — generate git commit messages with AI
 
 Usage:
-  commit-ai [flags]              Generate a commit message and run git commit
+  commit-ai [flags] [file ...]   Generate a commit message and run git commit
+                                 (with file arguments, only those files are
+                                 diffed, staged, and committed)
   commit-ai config <command>     Manage persisted configuration
+  commit-ai update               Self-update to the latest release
+  commit-ai version              Print the installed version
   commit-ai help                 Show this help
 
 Providers (select with ` + "`commit-ai config set provider <name>`" + `):
@@ -25,6 +29,7 @@ Flags:
 
 Examples:
   commit-ai                                       # use saved config
+  commit-ai src/main.go                           # commit only this file
   commit-ai --provider local                      # override provider once
   commit-ai --apiKey sk-...                       # first-time OpenAI setup
   commit-ai config set provider claude-code       # switch to Claude Code
