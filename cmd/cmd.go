@@ -67,8 +67,12 @@ func Cli() {
 	files := flag.Args()
 
 	gitDiff := src.GetGitChanges(files)
-	if len(files) > 0 && gitDiff == "" {
-		fmt.Fprintln(os.Stderr, "no unstaged changes found in the given file(s)")
+	if gitDiff == "" {
+		if len(files) > 0 {
+			fmt.Fprintln(os.Stderr, "no changes found in the given file(s)")
+		} else {
+			fmt.Fprintln(os.Stderr, "no changes to commit")
+		}
 		os.Exit(1)
 	}
 	spinner := src.StartSpinner("generating commit message")
