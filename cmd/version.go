@@ -1,4 +1,4 @@
 package cmd
 
-// Version is kept in sync with releases by release-please.
-const Version = "1.2.0" // x-release-please-version
+// Version is kept in sync with releases by the Release workflow.
+const Version = "1.2.0"

@@ -1,33 +1,71 @@
 name: Release
 
 on:
-  push:
-    branches: [master]
-    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump type"
+        required: true
+        type: choice
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
-  release-please:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+  release:
     runs-on: ubuntu-latest
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+      tag_name: ${{ steps.bump.outputs.tag }}
     steps:
-      - uses: googleapis/release-please-action@v4
-        id: release
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute next version
+        id: bump
+        run: |
+          LATEST=$(git tag --list 'v*' --sort=-v:refname | head -n1)
+          LATEST=${LATEST:-v0.0.0}
+          IFS=. read -r MAJOR MINOR PATCH <<< "${LATEST#v}"
+          case "${{ inputs.bump }}" in
+            major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH + 1)) ;;
+          esac
+          echo "version=${MAJOR}.${MINOR}.${PATCH}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${MAJOR}.${MINOR}.${PATCH}" >> "$GITHUB_OUTPUT"
+
+      - name: Update cmd/version.go
+        run: |
+          sed -i 's/const Version = "[^"]*"/const Version = "${{ steps.bump.outputs.version }}"/' cmd/version.go
+          grep -q 'const Version = "${{ steps.bump.outputs.version }}"' cmd/version.go
+
+      - name: Commit, tag and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cmd/version.go
+          git commit -m "chore: release ${{ steps.bump.outputs.tag }}"
+          git tag "${{ steps.bump.outputs.tag }}"
+          git push origin HEAD:master "${{ steps.bump.outputs.tag }}"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.bump.outputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --title "${{ steps.bump.outputs.tag }}" \
+            --generate-notes
 
   build:
     name: Build ${{ matrix.goos }}/${{ matrix.goarch }}
-    needs: [release-please]
-    if: |
-      always() && (
-        needs.release-please.outputs.release_created == 'true' ||
-        startsWith(github.ref, 'refs/tags/v')
-      )
+    needs: [release]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -39,7 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.release-please.outputs.tag_name || github.ref }}
+          ref: ${{ needs.release.outputs.tag_name }}
 
       - uses: actions/setup-go@v5
         with:
@@ -58,7 +96,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="${{ needs.release-please.outputs.tag_name || github.ref_name }}"
-          gh release upload "$TAG" \
+          gh release upload "${{ needs.release.outputs.tag_name }}" \
             "commit-ai-${{ matrix.goos }}-${{ matrix.goarch }}" \
             --repo "${{ github.repository }}" --clobber
