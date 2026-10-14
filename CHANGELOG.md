@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/Jonath-z/commit-ai/compare/v1.2.0...v1.2.0) (2026-10-14)
+
+
+### Bug Fixes
+
+* include untracked files when generating commit messages ([e4c992a](https://github.com/Jonath-z/commit-ai/commit/e4c992acedabd37abbdaf50bac251ef24fe119b1))
+
+
+### Documentation
+
+* add release announcement article ([a3c28a4](https://github.com/Jonath-z/commit-ai/commit/a3c28a42c48ba0702964dde6932898456aecfdd6))
+
 ## [1.2.0](https://github.com/Jonath-z/commit-ai/compare/v1.2.0...v1.2.0) (2026-10-03)
 
 
