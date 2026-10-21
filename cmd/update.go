@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -100,11 +101,28 @@ func replaceBinary(url, exe string) error {
 		tmp.Close()
 		return fmt.Errorf("download failed: %w", err)
 	}
+	// Flush the download to disk before it is executed: macOS validates
+	// code-signature pages against the on-disk file and can kill the first
+	// run of a binary whose pages are not fully flushed yet.
+	if err := tmp.Sync(); err != nil {
+		tmp.Close()
+		return err
+	}
 	if err := tmp.Close(); err != nil {
 		return err
 	}
 	if err := os.Chmod(tmpPath, 0o755); err != nil {
 		return err
 	}
-	return os.Rename(tmpPath, exe)
+	if err := os.Rename(tmpPath, exe); err != nil {
+		return err
+	}
+
+	if runtime.GOOS == "darwin" {
+		// macOS occasionally kills the first execution of a freshly
+		// replaced binary while the kernel revalidates its signature.
+		// Absorb that first run here so the user's next invocation works.
+		_ = exec.Command(exe, "version").Run()
+	}
+	return nil
 }
