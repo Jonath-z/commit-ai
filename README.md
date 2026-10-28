@@ -87,16 +87,25 @@ commit-ai config set local.model llama3
 
 ## Usage
 
-Inside a git repo with unstaged changes:
+### Commit all changes
+
+Inside a git repo with unstaged changes, run the command with no arguments. It stages everything (`git add .`), generates a commit message from the diff, and commits:
 
 ```bash
 commit-ai
 ```
 
-Commit only specific files (other changes stay untouched):
+### Commit a single file
+
+Pass the file path as an argument. Only that file is staged and committed — all other changes stay untouched:
 
 ```bash
 commit-ai src/main.go
+```
+
+You can also pass several files to commit them together:
+
+```bash
 commit-ai src/main.go README.md
 ```
 
